@@ -1,8 +1,9 @@
 import javax.imageio.ImageIO;
-import javax.imageio.imageio;
 import java.io.IOException;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Player {
 
@@ -34,9 +35,9 @@ public class Player {
 	public int gravity = 370;
 
 	//Protagonist's Draw activation:
-	public Draw paint;
+	public Paint paint;
 
-	public Player(Draw paint){
+	public Player(Paint paint){
 		try{
 			image = ImageIO.read(resource);
 		}catch(IOException e){
@@ -47,7 +48,7 @@ public class Player {
 		idleAnimation(paint);
 	}
 	
-	public Player(int x, int y, Draw paint){
+	public Player(int x, int y, Paint paint){
 		x = xPos;
 		y = yPos;
 
@@ -64,7 +65,7 @@ public class Player {
 		idleAnimation(paint);
 	}
 
-	public void idleAnimation(Draw paint){
+	public void idleAnimation(Paint paint){
 		isIdle = true;
 		Thread idleThread = new Thread (new Runnable(){
 			public void run(){
@@ -113,6 +114,70 @@ public class Player {
 				e.printStackTrace();
 			}
 		}
+
+	public void jumpingAnimation(){
+		Thread jumpingThread = new Thread(new Runnable(){
+			public void run(){
+				for(int i = 0; i < 7; i++){
+					if(isFacingRight == true){
+						imageFile = getClass().getResource("jumImages/jump"+i+".png");
+						yPos-=10;			
+						xPos+=15;
+					}else{
+						imageFile = getClass().getResource("jumImages/jumpback"+i+".png");
+						yPos-=10;		
+						xPos-=15;						
+					}
+					try{
+						canvas.repaint();
+						playerImage = ImageIO.read(imageFile);
+						Thread.sleep(1000/30);
+					}catch(IOException e){
+						e.printStackTrace();
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}
+				}
+				//After Jumping go to fall method
+				fallingAnimation();				
+			}
+		});		
+		jumpingThread.start();
+	}
+
+	//Player Falling method
+	public void fallingAnimation(){
+		Thread fallingThread = new Thread(new Runnable(){
+			public void run(){
+				do{
+					for(int i = 0; i < 4; i ++){
+						if(isFacingRight == true){
+							imageFile = getClass().getResource("fallImages/fall"+i+".png");
+							
+						}else{
+							imageFile = getClass().getResource("fallImages/fallback"+i+".png");
+						}
+						yPos+=2;
+					}							
+					try{
+						canvas.repaint();
+						playerImage = ImageIO.read(imageFile);
+						Thread.sleep(1000/30);
+
+					}catch(IOException e){
+						e.printStackTrace();
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}	
+
+				//Do this code while the player is Higher than the gravity variable					
+				}while(yPos < gravity);
+				//return to idle position after falling
+				standingAnimation(canvas);
+			}
+		});
+		fallingThread.start();
+	}
 
 	public void moveLeft(){
 		x = x - 5;

@@ -4,18 +4,18 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.awt.Rectangle;
 
-public class Monster{
+public class Monster2{
 	
-	public BufferedImage monsterImage;
-	public URL monsterFile = getClass().getResource("slime/idle0.png");
+	public BufferedImage monster2Image;
+	public URL monster2File = getClass().getResource("knight/idle0.png");
 
 	public int xPos;
 	public int yPos;
 	public int width;
 	public int height;
 
-	public int hp = 25;
-	public int atk = 3
+	public int hp = 40;
+	public int atk = 10
 
 	public boolean isIdle = false;
 	public boolean isMoving = true;
@@ -26,34 +26,34 @@ public class Monster{
 
 	public Paint paint;
 
-	public Monster(Paint color){
+	public Monster2(Paint color){
 
 		try{
-			monsterImage = ImageIO.read(monsterFile);
+			monster2Image = ImageIO.read(monster2File);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 
-	public Monster(int x, int y, Paint color){
+	public Monster2(int x, int y, Paint color){
 		xPos = x;
 		yPos = y;
 		try{
-			monsterImage = ImageIO.read(monsterFile);
+			monster2Image = ImageIO.read(monster2File);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 		this.paint = color;
-		this.width = monsterFile.getWidth();
-		this.height = monsterFile.getHeight();
+		this.width = monster2File.getWidth();
+		this.height = monster2File.getHeight();
 		idleMonster();
 	}
 
-	public Rectangle monsterBounds(){
+	public Rectangle monster2Bounds(){
 		return (new Rectangle(xPos, yPos, width, height));
 	}
 
-	public boolean monsterDirection(){
+	public boolean monster2Direction(){
 		if(xPos < paint.protagonist.xPos){
 			return isFacingRight = false;
 		}else{
@@ -61,15 +61,15 @@ public class Monster{
 		}
 	}
 
-	public void idleMonster(){
+	public void idleMonster2(){
 		Thread idleThread = new Thread(new Runnable(){
 			public void run(){
 				while(isIdle){
 					for(int ctr = 0; ctr < 4; ctr ++){
-						monsterFile = getClass().getResource("slime/idle"+ctr+".png");
+						monster2File = getClass().getResource("slime/idle"+ctr+".png");
 						try{
 							paint.repaint();
-							monsterImage = ImageIO.read(monsterFile);
+							monster2Image = ImageIO.read(monster2File);
 							Thread.sleep(150);
 						}catch(IOException e){
 							e.printStackTrace();
@@ -83,7 +83,7 @@ public class Monster{
 		idleThread.start();
 	}
 
-	public void movementMonster(){
+	public void movementMonster2(){
 		isIdle = false;
 		isMoving = true;
 		monsterDirection();
@@ -94,16 +94,16 @@ public class Monster{
 						if(isFacingRight == true){
 							if(xPos > paint.protagonist.xPos){
 								xPos--;
-								monsterFile = getClass().getResource("slime/move"+ctr+".png");
+								monster2File = getClass().getResource("slime/move"+ctr+".png");
 							}
 						
 						}else{
-							monsterFile = getClass().getResource("slime/move"+ctr+".png");
+							monster2File = getClass().getResource("slime/move"+ctr+".png");
 							xPos++;
 						}
 						try{
 							paint.repaint();
-							monsterImage = ImageIO.read(monsterFile);
+							monster2Image = ImageIO.read(monster2File);
 							Thread.sleep(333);
 						}catch(IOException e){
 							e.printStackTrace();
@@ -117,21 +117,21 @@ public class Monster{
 		moveThread.start();
 	}
 
-	public void attackMonster(){
+	public void attackMonster2(){
 		isMoving = false;
 		monsterDirection();
 		for(int ctr = 0; ctr < 5; ctr++){
 			if(isFacingRight == true && isAttacking == true){
-				monsterFile = getClass().getResource("slime/attack"+ctr+".png");
+				monster2File = getClass().getResource("slime/attack"+ctr+".png");
 				xPos-=5;
 			}else{
-				monsterFile = getClass().getResource("slime/attack"+ctr+".png");
+				monster2File = getClass().getResource("slime/attack"+ctr+".png");
 				xPos+=5;
 			}
 
 			try{
 				paint.repaint();
-				monsterImage = ImageIO.read(monsterFile);
+				monster2Image = ImageIO.read(monster2File);
 				Thread.sleep(200);
 
 			}catch(IOException e){
@@ -152,12 +152,12 @@ public class Monster{
 		return false;
 	}
 
-	public void monsterDeath(){
+	public void monster2Death(){
 		for(int ctr = 0; ctr < 4; ctr++){
-			monsterFile = getClass().getResource("slime/die"+ctr+".png");
+			monster2File = getClass().getResource("slime/die"+ctr+".png");
 			try{
 				paint.repaint();
-				monsterImage = ImageIO.read(monsterFile);
+				monster2Image = ImageIO.read(monster2File);
 				Thread.sleep(300);
 			}catch(IOException e){
 				e.printStackTrace();
@@ -165,7 +165,7 @@ public class Monster{
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Monster Death");
+		System.out.println("Monster2 Death");
 		isDead = true;
 	}
 }
