@@ -29,27 +29,23 @@ public class Monster{
 	public Monster(Paint color){
 
 		try{
-			monsterFile = ImageIO.read(monsterImage);
+			monsterImage = ImageIO.read(monsterFile);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 
-	public Monster(int x, int y, Draw color){
-
+	public Monster(int x, int y, Paint color){
 		xPos = x;
 		yPos = y;
-
 		try{
-			monsterFile = ImageIO.read(monsterImage);
+			monsterImage = ImageIO.read(monsterFile);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-
 		this.paint = color;
-		this.width = creatureFile.getWidth();
-		this.height = creatureFile.getHeight();
-
+		this.width = monsterFile.getWidth();
+		this.height = monsterFile.getHeight();
 		idleMonster();
 	}
 
@@ -71,12 +67,10 @@ public class Monster{
 				while(isIdle){
 					for(int ctr = 0; ctr < 4; ctr ++){
 						monsterFile = getClass().getResource("slime/idle"+ctr+".png");
-
 						try{
 							paint.repaint();
 							monsterImage = ImageIO.read(monsterFile);
 							Thread.sleep(150);
-
 						}catch(IOException e){
 							e.printStackTrace();
 						}catch(InterruptedException e){
@@ -98,21 +92,19 @@ public class Monster{
 				while(isMoving){
 					for(int ctr = 0; ctr < 4; ctr++){ 
 						if(isFacingRight == true){
-							if(xPos > draw.player.xPos){
+							if(xPos > paint.protagonist.xPos){
 								xPos--;
-								creatureFile = getClass().getResource("slime/move"+i+".png");
+								monsterFile = getClass().getResource("slime/move"+ctr+".png");
 							}
-							
-						//else use facing left images and move to the left
+						
 						}else{
-							creatureFile = getClass().getResource("slimeIdle/moveback"+i+".png");
+							monsterFile = getClass().getResource("slime/move"+ctr+".png");
 							xPos++;
 						}
 						try{
-							draw.repaint();
-							creatureImage = ImageIO.read(creatureFile);
+							paint.repaint();
+							monsterImage = ImageIO.read(monsterFile);
 							Thread.sleep(333);
-
 						}catch(IOException e){
 							e.printStackTrace();
 						}catch(InterruptedException e){
@@ -123,5 +115,57 @@ public class Monster{
 			}
 		});
 		moveThread.start();
+	}
+
+	public void attackMonster(){
+		isMoving = false;
+		monsterDirection();
+		for(int ctr = 0; ctr < 5; ctr++){
+			if(isFacingRight == true && isAttacking == true){
+				monsterFile = getClass().getResource("slime/attack"+ctr+".png");
+				xPos-=5;
+			}else{
+				monsterFile = getClass().getResource("slime/attack"+ctr+".png");
+				xPos+=5;
+			}
+
+			try{
+				paint.repaint();
+				monsterImage = ImageIO.read(monsterFile);
+				Thread.sleep(200);
+
+			}catch(IOException e){
+				e.printStackTrace();
+			
+			}catch(InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public boolean chkHealth(){
+		if(health <= 0){
+			isAttacking = false;
+			isMoving = false;
+			return true;
+		}
+		return false;
+	}
+
+	public void monsterDeath(){
+		for(int ctr = 0; ctr < 4; ctr++){
+			monsterFile = getClass().getResource("slime/die"+ctr+".png");
+			try{
+				paint.repaint();
+				monsterImage = ImageIO.read(monsterFile);
+				Thread.sleep(300);
+			}catch(IOException e){
+				e.printStackTrace();
+			}catch(InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Monster Death");
+		isDead = true;
 	}
 }
