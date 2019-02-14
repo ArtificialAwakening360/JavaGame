@@ -96,13 +96,13 @@ public class Player {
 	}
 
 	public void moveAnimation(){
-			if(r < 6){
+			if(m < 6){
 				if(isFacingRight == true){
-					resource = getClass().getResource("adventurer/run"+r+".png");
+					resource = getClass().getResource("adventurer/run"+m+".png");
 				}else{
-					resource = getClass().getResource("adventurer/run"+r+".png");
+					resource = getClass().getResource("adventurer/run"+m+".png");
 				}
-				r++;
+				m++;
 			}else{
 				r = 0;
 			}
@@ -118,19 +118,19 @@ public class Player {
 	public void jumpingAnimation(){
 		Thread jumpingThread = new Thread(new Runnable(){
 			public void run(){
-				for(int i = 0; i < 7; i++){
+				for(int j = 0; j < 7; j++){
 					if(isFacingRight == true){
-						imageFile = getClass().getResource("jumImages/jump"+i+".png");
+						resource = getClass().getResource("adventurer/jump-0"+j+".png");
 						yPos-=10;			
 						xPos+=15;
 					}else{
-						imageFile = getClass().getResource("jumImages/jumpback"+i+".png");
+						resource = getClass().getResource("adventurer/jumpback"+j+".png");
 						yPos-=10;		
 						xPos-=15;						
 					}
 					try{
-						canvas.repaint();
-						playerImage = ImageIO.read(imageFile);
+						paint.repaint();
+						image = ImageIO.read(resource);
 						Thread.sleep(1000/30);
 					}catch(IOException e){
 						e.printStackTrace();
@@ -138,7 +138,6 @@ public class Player {
 						e.printStackTrace();
 					}
 				}
-				//After Jumping go to fall method
 				fallingAnimation();				
 			}
 		});		
@@ -150,33 +149,47 @@ public class Player {
 		Thread fallingThread = new Thread(new Runnable(){
 			public void run(){
 				do{
-					for(int i = 0; i < 4; i ++){
+					for(int f = 0; f < 4; f ++){
 						if(isFacingRight == true){
-							imageFile = getClass().getResource("fallImages/fall"+i+".png");
-							
+							resource = getClass().getResource("adventurer/fall-0"+f+".png");
 						}else{
-							imageFile = getClass().getResource("fallImages/fallback"+i+".png");
+							resource = getClass().getResource("adventurer/fallback"+f+".png");
 						}
 						yPos+=2;
 					}							
 					try{
-						canvas.repaint();
-						playerImage = ImageIO.read(imageFile);
+						paint.repaint();
+						image = ImageIO.read(resource);
 						Thread.sleep(1000/30);
-
 					}catch(IOException e){
 						e.printStackTrace();
 					}catch(InterruptedException e){
 						e.printStackTrace();
-					}	
-
-				//Do this code while the player is Higher than the gravity variable					
+					}						
 				}while(yPos < gravity);
-				//return to idle position after falling
-				standingAnimation(canvas);
+				idleAnimation(paint);
 			}
 		});
 		fallingThread.start();
+	}
+
+	public void crouchingAnimation(){
+		if(c < 4){
+			if(isFacingRight){
+				imageFile = getClass().getResource("crouchImages/crouch"+state+".png");
+			}else{				
+				imageFile = getClass().getResource("crouchImages/crouchback"+state+".png");
+			}
+			c++;
+		}else{
+			c = 0;
+		}	
+		try{
+			paint.repaint();
+			image = ImageIO.read(resource);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 
 	public void moveLeft(){

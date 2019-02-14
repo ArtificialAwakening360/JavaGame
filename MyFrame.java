@@ -51,6 +51,13 @@ public class MyFrame extends JFrame implements KeyListener{
 			if(protagonist.isDead != true){
 				protagonist.idleAnimation(drawing);
 			}
+		}else if(data == e.VK_UP){
+
+		}else if(data == e.VK_DOWN){
+			if (protagonist.isDead != true){
+				protagonist.idleAnimation(drawing);
+			}
+		}else if(code == e.VK_SPACE){
 		}
 	}
 
