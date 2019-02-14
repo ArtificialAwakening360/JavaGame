@@ -4,129 +4,168 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.awt.Rectangle;
 
-public class Monster2 {
-
-
-
-	public class Monster{
+public class Monster{
 	
-	public int xPos = 150;
-	public int yPos = 300;
-	public int width = 0;
-	public int height = 0;
-	public int life = 20;
-	public boolean idle = true;
-	public boolean alive = true;
-	public boolean contact = false;
+	public BufferedImage monsterImage;
+	public URL monsterFile = getClass().getResource("slime/idle0.png");
 
-	public BufferedImage image;
-	public URL resource = getClass().getResource("slime/idle0.png");
+	public int xPos;
+	public int yPos;
+	public int width;
+	public int height;
 
-	public Monster(Draw comp){
-		try{
-			image = ImageIO.read(resource);
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
+	public int hp = 25;
+	public int atk = 3
 
-		animate(comp);
-	}
+	public boolean isIdle = false;
+	public boolean isMoving = true;
+	public boolean isFacingRight = false;
+	public boolean isFacingLeft = false;
+	public boolean isAttacking = false;
+	public boolean isDead = false;
 
-	public Monster(int xPass, int yPass, Draw comp){
-		xPos = xPass;
-		yPos = yPass;
+	public Paint paint;
+
+	public Monster(Paint color){
 
 		try{
-			image = ImageIO.read(resource);
-		}
-		catch(IOException e){
+			monsterImage = ImageIO.read(monsterFile);
+		}catch(IOException e){
 			e.printStackTrace();
 		}
-
-		height = image.getHeight();
-		width = image.getWidth();
-
-		animate(comp);
 	}
 
-	public void animate(Draw compPass){
-		Thread monThread = new Thread(new Runnable(){
+	public Monster(int x, int y, Paint color){
+		xPos = x;
+		yPos = y;
+		try{
+			monsterImage = ImageIO.read(monsterFile);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		this.paint = color;
+		this.width = monsterFile.getWidth();
+		this.height = monsterFile.getHeight();
+		idleMonster();
+	}
+
+	public Rectangle monsterBounds(){
+		return (new Rectangle(xPos, yPos, width, height));
+	}
+
+	public boolean monsterDirection(){
+		if(xPos < paint.protagonist.xPos){
+			return isFacingRight = false;
+		}else{
+			return isFacingRight = true;
+		}
+	}
+
+	public void idleMonster(){
+		Thread idleThread = new Thread(new Runnable(){
 			public void run(){
-				while(idle){
-					for(int ctr = 0; ctr < 5; ctr++){
-						try {
-							if(ctr==4){
-								resource = getClass().getResource("slime/idle0.png");
-							}
-							else{
-								resource = getClass().getResource("slime/idle"+ctr+".png");
-							}
-							
-							try{
-								image = ImageIO.read(resource);
-							}
-							catch(IOException e){
-								e.printStackTrace();
-							}
-
-					        compPass.repaint();
-					        Thread.sleep(100);
-						} catch (InterruptedException e) {
+				while(isIdle){
+					for(int ctr = 0; ctr < 4; ctr ++){
+						monsterFile = getClass().getResource("slime/idle"+ctr+".png");
+						try{
+							paint.repaint();
+							monsterImage = ImageIO.read(monsterFile);
+							Thread.sleep(150);
+						}catch(IOException e){
+							e.printStackTrace();
+						}catch(InterruptedException e){
 							e.printStackTrace();
 						}
-					}
-
-					if(life<=0){
-						die(compPass);
 					}
 				}
 			}
 		});
-		monThread.start();
+		idleThread.start();
 	}
 
-	public void moveTo(int toX, int toY){
-		if(xPos<toX){
-			xPos++;
-		}
-		else if(xPos>toX){
-			xPos--;
-		}
-
-		if(yPos<toY){
-			yPos++;
-		}
-		else if(yPos>toY){
-			yPos--;
-		}
-	}
-
-	public void die(Draw compPass){
-		idle = false;
-		if(alive){
-			Thread monThread = new Thread(new Runnable(){
-				public void run(){
-					for(int ctr = 0; ctr < 4; ctr++){
-						try {					
-							resource = getClass().getResource("slime/die"+ctr+".png");
-							
-							try{
-								image = ImageIO.read(resource);
+	public void movementMonster(){
+		isIdle = false;
+		isMoving = true;
+		monsterDirection();
+		Thread moveThread = new Thread(new Runnable(){
+			public void run(){
+				while(isMoving){
+					for(int ctr = 0; ctr < 4; ctr++){ 
+						if(isFacingRight == true){
+							if(xPos > paint.protagonist.xPos){
+								xPos--;
+								monsterFile = getClass().getResource("slime/move"+ctr+".png");
 							}
-							catch(IOException e){
-								e.printStackTrace();
-							}
-					        compPass.repaint();
-					        Thread.sleep(100);
-						} catch (InterruptedException e) {
+						
+						}else{
+							monsterFile = getClass().getResource("slime/move"+ctr+".png");
+							xPos++;
+						}
+						try{
+							paint.repaint();
+							monsterImage = ImageIO.read(monsterFile);
+							Thread.sleep(333);
+						}catch(IOException e){
+							e.printStackTrace();
+						}catch(InterruptedException e){
 							e.printStackTrace();
 						}
 					}
-				}
-			});
-			monThread.start();
+				}		
+			}
+		});
+		moveThread.start();
+	}
+
+	public void attackMonster(){
+		isMoving = false;
+		monsterDirection();
+		for(int ctr = 0; ctr < 5; ctr++){
+			if(isFacingRight == true && isAttacking == true){
+				monsterFile = getClass().getResource("slime/attack"+ctr+".png");
+				xPos-=5;
+			}else{
+				monsterFile = getClass().getResource("slime/attack"+ctr+".png");
+				xPos+=5;
+			}
+
+			try{
+				paint.repaint();
+				monsterImage = ImageIO.read(monsterFile);
+				Thread.sleep(200);
+
+			}catch(IOException e){
+				e.printStackTrace();
+			
+			}catch(InterruptedException e){
+				e.printStackTrace();
+			}
 		}
-		alive = false;
+	}
+
+	public boolean chkHealth(){
+		if(health <= 0){
+			isAttacking = false;
+			isMoving = false;
+			return true;
+		}
+		return false;
+	}
+
+	public void monsterDeath(){
+		for(int ctr = 0; ctr < 4; ctr++){
+			monsterFile = getClass().getResource("slime/die"+ctr+".png");
+			try{
+				paint.repaint();
+				monsterImage = ImageIO.read(monsterFile);
+				Thread.sleep(300);
+			}catch(IOException e){
+				e.printStackTrace();
+			}catch(InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Monster Death");
+		isDead = true;
 	}
 }
