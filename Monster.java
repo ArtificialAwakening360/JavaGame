@@ -69,12 +69,12 @@ public class Monster{
 		Thread idleThread = new Thread(new Runnable(){
 			public void run(){
 				while(isIdle){
-					for(int i = 0; i < 4; i ++){
-						creatureFile = getClass().getResource("slimeIdle/slime" + i + ".png ");
+					for(int ctr = 0; ctr < 4; ctr ++){
+						monsterFile = getClass().getResource("slime/idle"+ctr+".png");
 
 						try{
-							draw.repaint();
-							creatureImage = ImageIO.read(creatureFile);
+							paint.repaint();
+							monsterImage = ImageIO.read(monsterFile);
 							Thread.sleep(150);
 
 						}catch(IOException e){
@@ -88,4 +88,40 @@ public class Monster{
 		});
 		idleThread.start();
 	}
-	
+
+	public void movementMonster(){
+		isIdle = false;
+		isMoving = true;
+		monsterDirection();
+		Thread moveThread = new Thread(new Runnable(){
+			public void run(){
+				while(isMoving){
+					for(int ctr = 0; ctr < 4; ctr++){ 
+						if(isFacingRight == true){
+							if(xPos > draw.player.xPos){
+								xPos--;
+								creatureFile = getClass().getResource("slime/move"+i+".png");
+							}
+							
+						//else use facing left images and move to the left
+						}else{
+							creatureFile = getClass().getResource("slimeIdle/moveback"+i+".png");
+							xPos++;
+						}
+						try{
+							draw.repaint();
+							creatureImage = ImageIO.read(creatureFile);
+							Thread.sleep(333);
+
+						}catch(IOException e){
+							e.printStackTrace();
+						}catch(InterruptedException e){
+							e.printStackTrace();
+						}
+					}
+				}		
+			}
+		});
+		moveThread.start();
+	}
+}
