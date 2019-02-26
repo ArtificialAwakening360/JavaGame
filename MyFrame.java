@@ -4,74 +4,106 @@ import java.awt.event.KeyListener;
 
 public class MyFrame extends JFrame implements KeyListener{
 
-	Draw drawing;
+	private final int FRAME_WIDTH = 600;
+	private final int FRAME_HEIGHT = 500;
+	private final String TITLE = "Adventures";
 
-	private Protagonist protagonist;
+	public int code;
 
-	public MyFrame(){
-		this.drawing = new Draw();
+	private Draw draw;
+	private Player player;
+	private MouseMotion mouse;
+
+	public GameFrame(){
+		draw = new Draw();
+		player = draw.player;
+
+		mouse = draw.mouse;
+
+		addKeyListener(this);
+		initialize();
+	}
+
+	public void initialize(){
+		setSize(FRAME_WIDTH, FRAME_HEIGHT);
+		setDefaultCloseOperation(3);
+		setResizable(false);
+		setTitle(TITLE);
+		setVisible(true);
+		getContentPane().add(draw);
 	}
 
 	public void keyPressed(KeyEvent e){
+		code = e.getKeyCode();
 
-		
-		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-			drawing.moveRight();
-			System.out.println("pos: " + drawing.x + ", " + drawing.y);
-		}
-		else if(e.getKeyCode() == KeyEvent.VK_LEFT){
-			drawing.moveLeft();
-			System.out.println("pos: " + drawing.x + ", " + drawing.y);
-		}
-		else if(e.getKeyCode() == KeyEvent.VK_F){
-			drawing.attackSword();
-			System.out.println("attack");
-		}
-		else if(e.getKeyCode() == KeyEvent.VK_R){
-			drawing.attackCast();
-			System.out.println("cast");
-		}
-		else if(e.getKeyCode() == KeyEvent.VK_G){
-			drawing.attackBow();
-			System.out.println("fire");
-		}
-		else if(e.getKeyCode() == KeyEvent.VK_SPACE){
-			drawing.spawnEnemy();
+		if(code == e.VK_LEFT){
+			if(player.isDead != true){
+				player.moveLeft();
+			}
+
+		}else if(code == e.VK_RIGHT){
+			if(player.isDead != true){
+				player.moveRight();
+			}
+
+		}else if(code == e.VK_UP){
+			if(player.isDead != true){
+				player.jump();
+			}
+			
+		}else if(code == e.VK_DOWN){
+			if(player.isDead != true){
+				player.crouch();
+			}
+
+		}else if(code == e.VK_A){
+			if(player.isDead != true){
+				player.useMagic(draw);
+			}
+
+		}else if(code == e.VK_S){
+			if(player.isDead != true){
+				player.useSword();
+			}
 		}
 	}
 
 	public void keyReleased(KeyEvent e){
-		data =e.getKeyCode();
+		code = e.getKeyCode();
 
-		if(data == e.VK_LEFT){
-			if(protagonist.isDead != true){
-				protagonist.idleAnimation(drawing);
+		if(code == e.VK_LEFT){
+			if(player.isDead != true){
+				player.standingAnimation(draw);
 			}
-		}else if(data == e.VK_RIGHT){
-			if(protagonist.isDead != true){
-				protagonist.idleAnimation(drawing);
+		}else if(code == e.VK_RIGHT){
+			if(player.isDead != true){
+				player.standingAnimation(draw);
 			}
-		}else if(data == e.VK_UP){
+			
+		}else if(code == e.VK_UP){
 
-		}else if(data == e.VK_DOWN){
-			if (protagonist.isDead != true){
-				protagonist.idleAnimation(drawing);
+
+		}else if(code == e.VK_DOWN){
+			if(player.isDead != true){
+				player.standingAnimation(draw);
 			}
 		}else if(code == e.VK_SPACE){
 		}
 	}
 
 	public void keyTyped(KeyEvent e){
-		
+
+	}
+
+	public int getFrameWidth(){
+		return FRAME_WIDTH;
+	}
+
+	public int getFrameHeight(){
+		return FRAME_HEIGHT;
 	}
 
 	public static void main(String args[]){
-		MyFrame gameFrame = new MyFrame();
-		gameFrame.setSize(600,600);
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameFrame.setVisible(true);
-		gameFrame.getContentPane().add(gameFrame.drawing);
-		gameFrame.addKeyListener(gameFrame);
-		System.out.println("practical programming");
+		MyFrame frame = new MyFrame();
 	}
 }

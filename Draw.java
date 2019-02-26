@@ -243,204 +243,45 @@ public class Draw extends JComponent implements ActionListener{
 			for(int p = 0; p < player.missleList.size(); p++){
 				System.out.println("Assessing");
 				
-				if(player.missleList.get(j).missleImpact == true){
+				if(player.missleList.get(p).missleImpact == true){
 					System.out.println("Assessing Magic Damage");
-					creatureList.get(j).health-=player.missleList.get(j).magicDmg;
+					monsterList.get(p).health-=player.missleList.get(j).magicDmg;
 				}	
 			}
 		}
 
 		for(int m = 0; m < monsterList.size(); m ++){
-			if(monsterList.get(i).isAttacking == true){
+			if(monsterList.get(m).isAttacking == true){
 				player.healthBar = player.healthBar - (monsterList.get(d).power / player.defense);
 				System.out.println("Assessing Monster Damage");
 			}
 		}
 	}
 
-	public void swordAnimation(){
-		Thread swordThread = new Thread(new Runnable(){
-			public void run(){
-				for(int ctr = 0; ctr < 17; ctr++){
-					try {
-						if(ctr==17){
-							resource = getClass().getResource("adventurer/adventurer-swrd-drw-00.png");
-						}
-						else{
-							resource = getClass().getResource("adventurer/attack"+ctr+".png");
-						}
-						
-						try{
-							image = ImageIO.read(resource);
-						}
-						catch(IOException e){
-							e.printStackTrace();
-						}
-				        repaint();
-				        Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		swordThread.start();
-		for(int x=0; x<monsters.length; x++){
-					if(monsters[x]!=null){
-						if(monsters[x].contact){
-							monsters[x].life = monsters[x].life - 10;
-						}
-					}
-				}
-
-	}
-
-	public void castAnimation(){
-		Thread castThread = new Thread(new Runnable(){
-			public void run(){
-				for(int ctr = 1; ctr < 5; ctr++){
-					try {
-						if(ctr==5){
-							resource = getClass().getResource("adventurer/idle-00.png");
-						}
-						else{
-							resource = getClass().getResource("adventurer/cast-0"+ctr+".png");
-						}
-						
-						try{
-							image = ImageIO.read(resource);
-						}
-						catch(IOException e){
-							e.printStackTrace();
-						}
-				        repaint();
-				        Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		castThread.start();
-		for(int x=0; x<monsters.length; x++){
-							if(monsters[x]!=null){
-								if(monsters[x].contact){
-									monsters[x].life = monsters[x].life - 10;
-								}
-							}
-						}
-	}
-
-	public void bowAnimation(){
-		Thread bowThread = new Thread(new Runnable(){
-			public void run(){
-				for(int ctr = 0; ctr < 10; ctr++){
-					try {
-						if(ctr==9){
-							resource = getClass().getResource("adventurer/idle-2-03.png");
-						}
-						else{
-							resource = getClass().getResource("adventurer/bow-0"+ctr+".png");
-						}
-						
-						try{
-							image = ImageIO.read(resource);
-						}
-						catch(IOException e){
-							e.printStackTrace();
-						}
-				        repaint();
-				        Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		bowThread.start();
-		for(int x=0; x<monsters.length; x++){
-					if(monsters[x]!=null){
-						if(monsters[x].contact){
-							monsters[x].life = monsters[x].life - 10;
-						}
-					}
-				}
-	}
-
-
-
-	public void attackSword(){
-		swordAnimation();
-	}
-
-	public void attackBow(){
-		bowAnimation();
-	}
-
-	public void attackCast(){
-		castAnimation();
-	}
-	
-	public void checkCollision(){
-		int xChecker = x + width;
-		int yChecker = y;
-
-		for(int x=0; x<monsters.length; x++){
-			boolean collideX = false;
-			boolean collideY = false;
-
-			if(monsters[x]!=null){
-				monsters[x].contact = false;
-
-				if(yChecker > monsters[x].yPos){
-					if(yChecker-monsters[x].yPos < monsters[x].height){
-						collideY = true;
-					}
-				}
-				else{
-					if(monsters[x].yPos - yChecker < monsters[x].height){
-						collideY = true;
-					}
-				}
-
-				if(xChecker > monsters[x].xPos){
-					if(xChecker-monsters[x].xPos < monsters[x].width){
-						collideX = true;
-					}
-				}
-				else{
-					if(monsters[x].xPos - xChecker < 5){
-						collideX = true;
-					}
-				}
-			}
-
-			if(collideX && collideY){
-				System.out.println("collision!");
-				monsters[x].contact = true;
+	public void eraseImages(){
+		
+		for(int e = 0; e < creatureList.size(); e++){
+			if(monsterList.get(e).health <= 0 ){
+				monsterList.remove(i);
+				System.out.println("monster deleted");
 			}
 		}
-	}
 	
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		g.setColor(Color.YELLOW);
-		g.drawImage(backgroundImage, 0, 0, this);
-
-		// character grid for hero
-		// g.setColor(Color.YELLOW);
-		// g.fillRect(x, y, width, height);
-		g.drawImage(image, x, y, this);
+		for(int e = 0; e < player.missleList.size(); e++){
+			if(player.missleList.get(e).missleImpact == true ||player.missileList.get(e).magicX >= 550){
+				System.out.println("magic deletion");
+				player.missileList.remove(e);			
+			}
+		}
 		
-		for(int c = 0; c < monsters.length; c++){
-			if(monsters[c]!=null){
-				// character grid for monsters
-				// g.setColor(Color.BLUE);
-				// g.fillRect(monsters[c].xPos, monsters[c].yPos+5, monsters[c].width, monsters[c].height);
-				g.drawImage(monsters[c].image, monsters[c].xPos, monsters[c].yPos, this);
-				g.setColor(Color.GREEN);
-				g.fillRect(monsters[c].xPos+7, monsters[c].yPos, monsters[c].life, 2);
-			}	
+		for(int e = 0; e < manaList.size(); e++){
+			if(player.isUsingMagic == true){
+				if(manaList.contains(manaList.get(i))){
+					manaList.remove(manaList.remove(i));
+					System.out.println("Mana orb Deletion");
+					break;
+				}
+			}
 		}
 	}
 }
