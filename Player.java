@@ -115,8 +115,8 @@ public class Player {
 			}
 		}
 
-	public void jumpingAnimation(){
-		Thread jumpingThread = new Thread(new Runnable(){
+	public void jumpAnimation(){
+		Thread jumpThread = new Thread(new Runnable(){
 			public void run(){
 				for(int j = 0; j < 7; j++){
 					if(isFacingRight == true){
@@ -138,15 +138,14 @@ public class Player {
 						e.printStackTrace();
 					}
 				}
-				fallingAnimation();				
+				fallAnimation();				
 			}
 		});		
-		jumpingThread.start();
+		jumpThread.start();
 	}
 
-	//Player Falling method
-	public void fallingAnimation(){
-		Thread fallingThread = new Thread(new Runnable(){
+	public void fallAnimation(){
+		Thread fallThread = new Thread(new Runnable(){
 			public void run(){
 				do{
 					for(int f = 0; f < 4; f ++){
@@ -170,15 +169,15 @@ public class Player {
 				idleAnimation(paint);
 			}
 		});
-		fallingThread.start();
+		fallThread.start();
 	}
 
-	public void crouchingAnimation(){
+	public void crouchAnimation(){
 		if(c < 4){
 			if(isFacingRight){
-				imageFile = getClass().getResource("crouchImages/crouch"+state+".png");
+				imageFile = getClass().getResource("adventurer/crouch-0"+state+".png");
 			}else{				
-				imageFile = getClass().getResource("crouchImages/crouchback"+state+".png");
+				imageFile = getClass().getResource("adventurer/crouch-0"+state+".png");
 			}
 			c++;
 		}else{
@@ -190,6 +189,81 @@ public class Player {
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+
+	public void playerMana(Draw canvas){
+		
+		Thread manaThread = new Thread(new Runnable(){
+			public void run(){
+				for(int i = 0; i < 7; i++){
+					if(isFacingRight == true){
+						imageFile = getClass().getResource("spellImages/spell" +i+".png");
+					}else{
+						imageFile = getClass().getResource("spellImages/spell" +i+".png");
+					}
+
+					try{
+						canvas.repaint();
+						playerImage = ImageIO.read(imageFile);
+						Thread.sleep(1000/30);
+					}catch(IOException e){
+						e.printStackTrace();
+
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}
+				}
+				fireMana(canvas);
+				idleAnimation(canvas);
+			}
+		});
+		manaThread.start();
+	}
+
+	public void fireMana(Draw canvas){
+		if(missleList.size() != 11){
+			
+			magicMissile[magicAmmo] = new MagicMissile(xPos + 20, yPos, canvas);
+			
+			missileList.add(magicMissle[magicAmmo]);
+	
+			magicAmmo++;
+			
+			isUsingMagic = true;
+		}else{
+
+		}	
+		System.out.println(misslieTest.size() +"MISSiLE TEST");
+	}
+
+	public void swordAttack(){
+		Thread swordThread = new Thread(new Runnable(){
+			public void run(){
+				for(int s = 0; s < 15; s++){
+					if(useSword == true){
+						if(isFacingRight == true){
+							imageFile = getClass().getResource("swordImages/sword" +i+".png");
+						}else{
+							imageFile = getClass().getResource("swordImages/swordback" +i+".png");
+						}
+					}
+
+					try{
+						canvas.repaint();
+						playerImage = ImageIO.read(imageFile);
+						Thread.sleep(1000/30);
+
+					}catch(IOException e){
+						e.printStackTrace();
+					}catch(InterruptedException e){
+						e.printStackTrace();
+					}
+				}
+				usingSword = false;
+				standingAnimation(canvas);
+			}
+		});
+		swordThread.start();
 	}
 
 	public void moveLeft(){
