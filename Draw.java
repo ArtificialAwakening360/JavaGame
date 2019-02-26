@@ -116,42 +116,145 @@ public class Draw extends JComponent implements ActionListener{
 				}
 			}
 
-			for(int i = 0; i < monsterList.size(); i++){
+			for(int r = 0; r < monsterList.size(); r++){
 				if(monsterList.size() != 0){
-					g.drawImage(monsterList.get(i).monsterImage, monsterList.get(i).xPos, creatureList.get(i).yPos, this);
+					g.drawImage(monsterList.get(r).monsterImage, monsterList.get(r).xPos, monsterList.get(r).yPos, this);
 					g.setColor(Color.RED);
-					g.fillRect(monsterList.get(i).xPos, monsterList.get(i).yPos, 35, 2);
+					g.fillRect(monsterList.get(r).xPos, monsterList.get(r).yPos, 35, 2);
 					g.setColor(Color.GREEN);
-					g.fillRect(monsterList.get(i).xPos, monsterList.get(i).yPos, creatureList.get(i).health, 2);
+					g.fillRect(monsterList.get(r).xPos, monsterList.get(r).yPos, monsterList.get(r).health, 2);
 				}		
 			}
 	}
 
+	public void loadPlayerStats(Graphics g){
+
+		String health = String.valueOf(player.healthBar);
+		g.setColor(Color.BLACK);
+		g.fillRect(6, 18, 264, 34);
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(8, 20, 260, 30);
+
+		g.setColor(Color.MAGENTA);
+		g.fillRect(6, 53, 264, 24);
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(8, 55, 260, 20);
+
+		g.setColor(Color.RED);
+		g.fillRect(50, 25, 200, 10);
+		g.setColor(Color.GREEN);
+		g.fillRect(50, 25, player.healthBar, 10);
+
+		g.setColor(Color.GREEN);
+		g.setFont(new Font("Arial", Font.BOLD, 10));
+		g.drawString("Health:", 10, 34);
+		g.setColor(Color.GREEN);
+		g.setFont(new Font("Arial", Font.BOLD, 10));
+		g.drawString(health + "/200", 60, 47);
+
+		g.setColor(Color.MAGENTA);
+		g.setFont(new Font("Arial", Font.BOLD, 10));
+		g.drawString("Mana:", 10, 66);
+
+		for(int m = 0; m < manaList.size(); m++){
+			g.drawImage(manaList.get(m).manaImage, manaList.get(m).xPos, manaList.get(m).yPos, this);
+		}
+	}
+
 	public void startGame(){
-		Thread gameThread = new Thread(new Runnable(){
+		Thread startThread = new Thread(new Runnable(){
 			public void run(){
-				while(true){
-					try{
-						for(int c = 0; c < monsters.length; c++){
-							if(monsters[c]!=null){
-								monsters[c].moveTo(x,y);
-								repaint();
+				try{	
+					while(true){
+						
+						for(int m = 0; m < monsterList.size(); m++){
+
+							if(monsterList.get(m).checkHealth() == true){
+								monsterList.get(m).monsterDeath();
+								collisionDetection();
+								eraseImages();
+							} 
+							if(monsterList.get(m).isAttacking != true){
+								monsterList.get(m).movementMonster();
+								collisionDetection();
+
+							}else {
+								monsterList.get(m).attackMonster();
+								System.out.println("monster attack");
+								collisionDetection();
+								damageDetection();
+
 							}
 						}
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-							e.printStackTrace();
+						Thread.sleep(350);
 					}
+				}catch(ArrayIndexOutOfBoundsException e){
+					e.printStackTrace();
+					spawnCreature();
+					
+				}catch(InterruptedException e){
+					e.printStackTrace();
 				}
 			}
 		});
 		gameThread.start();
 	}
 
-	public void spawnEnemy(){
-		if(enemyCount < 10){
-			monsters[enemyCount] = new Monster(randomizer.nextInt(500), randomizer.nextInt(500), this);
-			enemyCount++;
+	public void actionPerformed(ActionEvent arg0) {
+		spawnMonster();	
+	}
+
+	public void collisionDetection(){
+		
+		for(int c = 0; c < monsterList.size(); c++){
+			Rectangle playerBounds = player.playerBounds();
+			Rectangle monsterBounds = monsterList.get(c).monsterBounds();
+			
+			if(monsterList.size() != 0){
+				if(playerBounds.intersects(monsterBounds)){
+					monsterList.get(c).isAttacking = true;
+					System.out.println("INTERSECT MONSTERS");
+				
+				}else{
+					creatureList.get(c).isAttacking = false;
+					creatureList.get(c).isMoving = true;
+				}
+				if(player.drawsSword == true){
+					if(playerBounds.intersects(monsterBounds)){
+						System.out.println("Player attacks");
+						monsterList.get(c).health-=player.power;
+					}
+				}
+				for(MagicMissle playerMagic: player.missileList){
+					if(playerMagic.magicBounds().intersects(monsterBounds)){
+						playerMagic.magicHit();
+						damageDetection();
+						eraseImages();
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	public void damageDetection(){
+
+		for(int m = 0; m < monsterList.size(); m ++){
+			for(int p = 0; p < player.missleList.size(); p++){
+				System.out.println("Assessing");
+				
+				if(player.missleList.get(j).missleImpact == true){
+					System.out.println("Assessing Magic Damage");
+					creatureList.get(j).health-=player.missleList.get(j).magicDmg;
+				}	
+			}
+		}
+
+		for(int m = 0; m < monsterList.size(); m ++){
+			if(monsterList.get(i).isAttacking == true){
+				player.healthBar = player.healthBar - (monsterList.get(d).power / player.defense);
+				System.out.println("Assessing Monster Damage");
+			}
 		}
 	}
 
