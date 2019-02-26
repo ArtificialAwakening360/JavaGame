@@ -6,11 +6,9 @@ import java.awt.Rectangle;
 
 public class MagicMissle{
 
-	//Magic Image
 	public BufferedImage magicImage;
-	public URL magicFile = getClass().getResource("playerMagic/magic1.png");
+	public URL magicFile = getClass().getResource("projectileMagic/magic1.png");
 
-	//Magic position
 	public int magicX;
 	public int magicY;
 	public int magicWidth;
@@ -18,13 +16,11 @@ public class MagicMissle{
 
 	public Draw draw;
 
-	//Magic States
 	public boolean faceRight = true;
 	public boolean magicActive = false;
 	public boolean missleImpact = false;
 	public boolean missleDmg = false;
 	
-	// Magic Stats
 	public int magicDmg = 7;
 
 	public MagicMissle(Draw canvas){
@@ -37,9 +33,7 @@ public class MagicMissle{
 		usingMagic();
 	}
 	public MagicMissle(int x, int y, Draw canvas){
-		//Turns on magic
 		magicActive = true;
-		//Assigns magic postion
 		magicX = x;
 		magicY = y;
 
@@ -48,15 +42,13 @@ public class MagicMissle{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-		//Assigns magic variables as image size
+	
 		this.magicWidth = magicImage.getWidth();
 		this.magicHeight = magicImage.getHeight();
 
-		//Goes to using magic method
 		usingMagic();
 	}
 
-	//For magic Collision sets the rectangle as image of magic missle
 	public Rectangle magicBounds(){
 		return (new Rectangle(magicX, magicY, magicWidth, magicHeight));
 	}
@@ -65,16 +57,14 @@ public class MagicMissle{
 		magicActive = true;
 		Thread magicThread = new Thread(new Runnable(){
 			public void run(){
-				//While magic is being used
+				
 				while(magicActive){
 					
-					//First four frames do this code
 					for(int i = 0; i < 7; i++){
 						if(i < 4){
 							magicFile = getClass().getResource("playerMagic/magic"+i+".png");
 							magicX+=10;
 
-							//else do this code until impact or magic goes off screen
 						}else if(i >= 3 && i < 7){
 							if(magicX < 600){
 								magicFile = getClass().getResource("playerMagic/magic"+i+".png");
@@ -102,7 +92,6 @@ public class MagicMissle{
 	}
 
 	public void magicHit(){
-		//Turns off magic active
 		magicActive = false;
 		for(int i = 0; i <8; i++){
 				magicFile = getClass().getResource("playerMagic/hit" + i+".png");
@@ -114,8 +103,7 @@ public class MagicMissle{
 				e.printStackTrace();
 
 			}
-		}
-		//After running hit animation turn impact to true	
+		}	
 		missleImpact = true;
 		System.out.println("Magic Strike Hit!");		
 	}
