@@ -12,9 +12,9 @@ public class MyFrame extends JFrame implements KeyListener{
 
 	private Draw draw;
 	private Player player;
-	private MouseMotion mouse;
+	private MouseListener mouse;
 
-	public GameFrame(){
+	public MyFrame(){
 		draw = new Draw();
 		player = draw.player;
 
@@ -73,11 +73,11 @@ public class MyFrame extends JFrame implements KeyListener{
 
 		if(code == e.VK_LEFT){
 			if(player.isDead != true){
-				player.standingAnimation(draw);
+				player.idleAnimation(draw);
 			}
 		}else if(code == e.VK_RIGHT){
 			if(player.isDead != true){
-				player.standingAnimation(draw);
+				player.idleAnimation(draw);
 			}
 			
 		}else if(code == e.VK_UP){
@@ -85,7 +85,7 @@ public class MyFrame extends JFrame implements KeyListener{
 
 		}else if(code == e.VK_DOWN){
 			if(player.isDead != true){
-				player.standingAnimation(draw);
+				player.idleAnimation(draw);
 			}
 		}else if(code == e.VK_SPACE){
 		}

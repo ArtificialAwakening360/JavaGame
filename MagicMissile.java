@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.awt.Rectangle;
 
-public class MagicMissle{
+public class MagicMissile{
 
 	public BufferedImage magicImage;
 	public URL magicFile = getClass().getResource("projectileMagic/magic1.png");
@@ -23,7 +23,7 @@ public class MagicMissle{
 	
 	public int magicDmg = 7;
 
-	public MagicMissle(Draw canvas){
+	public MagicMissile(Draw canvas){
 
 		try{
 			magicImage = ImageIO.read(magicFile);
@@ -32,7 +32,7 @@ public class MagicMissle{
 		}
 		usingMagic();
 	}
-	public MagicMissle(int x, int y, Draw canvas){
+	public MagicMissile(int x, int y, Draw canvas){
 		magicActive = true;
 		magicX = x;
 		magicY = y;

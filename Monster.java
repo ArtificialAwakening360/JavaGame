@@ -15,7 +15,7 @@ public class Monster{
 	public int height;
 
 	public int hp = 25;
-	public int atk = 3
+	public int atk = 3;
 
 	public boolean isIdle = false;
 	public boolean isMoving = true;

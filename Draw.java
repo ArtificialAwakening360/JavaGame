@@ -25,7 +25,7 @@ public class Draw extends JComponent implements ActionListener{
 	public int button1_width = 200;
 	public int button1_height = 50;
 
-	public MouseMotion mouse;
+	public MouseListener mouse;
 	public Rectangle mouseBounds;
 
 	public Rectangle buttonTwo;
@@ -43,14 +43,14 @@ public class Draw extends JComponent implements ActionListener{
 	public int playerX = 20;
 	public int playerY = 60;
 
-	public ManaAmount mana[];
-	public ArrayList<ManaAmount>manaList = new ArrayList<>();
-	public int manaCapacity = 1;
-	public MagicMissle magicMissle;
-	public int manaX = 55;
-	public int manaY = 48;
-	public int bManaX = 65;
-	public int bManaY = 57;
+	public MagicAmount magic[];
+	public ArrayList<MagicAmount>magicList = new ArrayList<>();
+	public int magicCapacity = 1;
+	public MagicMissile magicMissile;
+	public int magicX = 55;
+	public int magicY = 48;
+	public int bMagicX = 65;
+	public int bMagicY = 57;
 
 	public Monster monster;
 	public ArrayList<Monster> monsterList = new ArrayList<>();
@@ -62,15 +62,15 @@ public class Draw extends JComponent implements ActionListener{
 	public Draw(){
 		timer.start();
 		spawnPlayer();
-		spawnCreature();
+		spawnMonster();
 		
-		mouse = new MouseMotion();
+		mouse = new MouseListener();
 		addMouseListener(mouse);
 		addMouseMotionListener(mouse);
 
 		try{
 			backgroundImage = ImageIO.read(backgroundFile);
-			image = ImageIO.read(resource);
+			image = ImageIO.read(backgroundImage);
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -80,20 +80,20 @@ public class Draw extends JComponent implements ActionListener{
 
 	public void spawnPlayer(){
 		player = new Player(x, gravity, this);
-		mana = new ManaAmount[10];
+		magic = new MagicAmount[10];
 
-		for(int i = 0; i < 10; i++){
-			mana[i] = new ManaAmount(manaX, manaY, this);
-			manaList.add(mana[i]);
-			manaX+=20;
+		for(int p = 0; p < 10; p++){
+			magic[p] = new MagicAmount(magicX, magicY, this);
+			magicList.add(magic[p]);
+			magicX+=20;
 		}
 	}
 
 	public void spawnMonster(){
 		int spawnPostion = 510;
 		if(monsterList.size() != 10){
-			creature = new Creature(spawnPostion, gravity + 10, this);
-			creatureList.add(creature);
+			monster = new Monster(spawnPostion, gravity + 10, this);
+			monsterList.add(monster);
 			counter++;
 		}	
 	}
@@ -154,10 +154,10 @@ public class Draw extends JComponent implements ActionListener{
 
 		g.setColor(Color.MAGENTA);
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		g.drawString("Mana:", 10, 66);
+		g.drawString("Magic:", 10, 66);
 
-		for(int m = 0; m < manaList.size(); m++){
-			g.drawImage(manaList.get(m).manaImage, manaList.get(m).xPos, manaList.get(m).yPos, this);
+		for(int m = 0; m < magicList.size(); m++){
+			g.drawImage(magicList.get(m).magicImage, magicList.get(m).xPos, magicList.get(m).yPos, this);
 		}
 	}
 
@@ -190,14 +190,14 @@ public class Draw extends JComponent implements ActionListener{
 					}
 				}catch(ArrayIndexOutOfBoundsException e){
 					e.printStackTrace();
-					spawnCreature();
+					spawnMonster();
 					
 				}catch(InterruptedException e){
 					e.printStackTrace();
 				}
 			}
 		});
-		gameThread.start();
+		startThread.start();
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -216,8 +216,8 @@ public class Draw extends JComponent implements ActionListener{
 					System.out.println("INTERSECT MONSTERS");
 				
 				}else{
-					creatureList.get(c).isAttacking = false;
-					creatureList.get(c).isMoving = true;
+					monsterList.get(c).isAttacking = false;
+					monsterList.get(c).isMoving = true;
 				}
 				if(player.drawsSword == true){
 					if(playerBounds.intersects(monsterBounds)){
@@ -225,7 +225,7 @@ public class Draw extends JComponent implements ActionListener{
 						monsterList.get(c).health-=player.power;
 					}
 				}
-				for(MagicMissle playerMagic: player.missileList){
+				for(MagicMissile playerMagic: player.missileList){
 					if(playerMagic.magicBounds().intersects(monsterBounds)){
 						playerMagic.magicHit();
 						damageDetection();
@@ -240,19 +240,19 @@ public class Draw extends JComponent implements ActionListener{
 	public void damageDetection(){
 
 		for(int m = 0; m < monsterList.size(); m ++){
-			for(int p = 0; p < player.missleList.size(); p++){
+			for(int p = 0; p < player.missileList.size(); p++){
 				System.out.println("Assessing");
 				
-				if(player.missleList.get(p).missleImpact == true){
+				if(player.missileList.get(p).missileImpact == true){
 					System.out.println("Assessing Magic Damage");
-					monsterList.get(p).health-=player.missleList.get(j).magicDmg;
+					monsterList.get(p).health-=player.missileList.get(p).magicDmg;
 				}	
 			}
 		}
 
 		for(int m = 0; m < monsterList.size(); m ++){
 			if(monsterList.get(m).isAttacking == true){
-				player.healthBar = player.healthBar - (monsterList.get(d).power / player.defense);
+				player.healthBar = player.healthBar - (monsterList.get(m).power / player.defense);
 				System.out.println("Assessing Monster Damage");
 			}
 		}
@@ -260,25 +260,25 @@ public class Draw extends JComponent implements ActionListener{
 
 	public void eraseImages(){
 		
-		for(int e = 0; e < creatureList.size(); e++){
+		for(int e = 0; e < monsterList.size(); e++){
 			if(monsterList.get(e).health <= 0 ){
 				monsterList.remove(i);
 				System.out.println("monster deleted");
 			}
 		}
 	
-		for(int e = 0; e < player.missleList.size(); e++){
-			if(player.missleList.get(e).missleImpact == true ||player.missileList.get(e).magicX >= 550){
+		for(int e = 0; e < player.missileList.size(); e++){
+			if(player.missileList.get(e).missileImpact == true ||player.missileList.get(e).magicX >= 550){
 				System.out.println("magic deletion");
 				player.missileList.remove(e);			
 			}
 		}
 		
-		for(int e = 0; e < manaList.size(); e++){
+		for(int e = 0; e < magicList.size(); e++){
 			if(player.isUsingMagic == true){
-				if(manaList.contains(manaList.get(i))){
-					manaList.remove(manaList.remove(i));
-					System.out.println("Mana orb Deletion");
+				if(magicList.contains(magicList.get(e))){
+					magicList.remove(magicList.remove(e));
+					System.out.println("Magic orb Deletion");
 					break;
 				}
 			}

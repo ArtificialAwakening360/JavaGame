@@ -15,7 +15,7 @@ public class MagicAmount{
 	public int xPos; 
 	public int yPos;
 
-	public ManaAmount(int x, int y, Draw canvas){
+	public MagicAmount(int x, int y, Draw canvas){
 
 		this.canvas = canvas;
 
