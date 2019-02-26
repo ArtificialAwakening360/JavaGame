@@ -195,11 +195,11 @@ public class Player {
 		
 		Thread manaThread = new Thread(new Runnable(){
 			public void run(){
-				for(int i = 0; i < 7; i++){
+				for(int m = 0; m < 7; m++){
 					if(isFacingRight == true){
-						imageFile = getClass().getResource("spellImages/spell" +i+".png");
+						imageFile = getClass().getResource("adventurer/cast-0"+m+".png");
 					}else{
-						imageFile = getClass().getResource("spellImages/spell" +i+".png");
+						imageFile = getClass().getResource("adventurer/cast-0"+m+".png");
 					}
 
 					try{
@@ -221,11 +221,11 @@ public class Player {
 	}
 
 	public void fireMana(Draw canvas){
-		if(missleList.size() != 11){
+		if(missileList.size() != 11){
 			
 			magicMissile[magicAmmo] = new MagicMissile(xPos + 20, yPos, canvas);
 			
-			missileList.add(magicMissle[magicAmmo]);
+			missileList.add(magicMissile[magicAmmo]);
 	
 			magicAmmo++;
 			
@@ -242,9 +242,9 @@ public class Player {
 				for(int s = 0; s < 15; s++){
 					if(useSword == true){
 						if(isFacingRight == true){
-							imageFile = getClass().getResource("swordImages/sword" +i+".png");
+							imageFile = getClass().getResource("adventurer/attack" +i+".png");
 						}else{
-							imageFile = getClass().getResource("swordImages/swordback" +i+".png");
+							imageFile = getClass().getResource("adventurer/swordback" +i+".png");
 						}
 					}
 
@@ -259,24 +259,80 @@ public class Player {
 						e.printStackTrace();
 					}
 				}
-				usingSword = false;
+				drawSword = false;
 				standingAnimation(canvas);
 			}
 		});
 		swordThread.start();
 	}
 
+	public void checkDeath(){
+		if(healthBar <= 0){
+			isDead = true;
+			isIdle = false;
+			playerDeath();
+		}
+	}
+
+	public void playerDeath(){
+		
+		for(int d = 0; d < 6; d++){	
+			if(isFacingRight == true){
+				imageFile = getClass().getResource("adventurer/die-0"+d+".png");
+			
+			}else{
+				imageFile = getClass().getResource("adventurer/dieback"+d+".png");
+			}
+
+			try{
+				canvas.repaint();
+				playerImage = ImageIO.read(imageFile);
+
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void moveLeft(){
-		x = x - 5;
-		reloadImage();
-		repaint();
-		checkCollision();
+		xPos-= 5;
+		isIdle = false;
+		isFacingRight = false;
+		checkDeath();
+		movementAnimation();
 	}
 
 	public void moveRight(){
-		x = x + 5;
-		reloadImage();
-		repaint();
-		checkCollision();
+		xPos = xPos + 5;
+		isIdle = false;
+		isFacingRight = true;
+		checkDeath();
+		movementAnimation();
+	}
+
+	public void jump(){
+		isIdle = false;
+		checkDeath();
+		jumpingAnimation();
+	}
+
+	public void crouch(){
+		isIdle = false;
+		checkDeath();
+		crouchAnimation();
+	}
+	public void useMagic(Draw canvas){
+		isIdle = false;
+		verifyDeath();
+		playerMagic(canvas);
+	}
+
+	public void useSword(){
+		isIdle = false;
+		isUsingMagic = false;
+		drawSword = true;
+		canvas.collisionDetection();
+		checkDeath();
+		swordAttack();
 	}
 }

@@ -1,56 +1,130 @@
 import javax.swing.JComponent;
-import javax.swing.Timer;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.Random;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Rectangle;
+import java.util.List;
+import java.util.ArrayList;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 
-public class Draw extends JComponent{
+public class Draw extends JComponent implements ActionListener{
 
-	private BufferedImage image;
+	public boolean beginGame = false;
+	public Rectangle buttonOne;
+	public int button1_x = 170;
+	public int button1_y = 150;
+	public int button1_width = 200;
+	public int button1_height = 50;
+
+	public MouseMotion mouse;
+	public Rectangle mouseBounds;
+
+	public Rectangle buttonTwo;
+	public int button2_x = 170;
+	public int button2_y = 250;
+	public int button2_width = 200;
+	public int button2_height = 50;
+
+	private final int gravity = 370;
+	private final int x = 50;
 	private BufferedImage backgroundImage;
-	private URL backGround = getClass().getResource("day.png");
-	public URL resource = getClass().getResource("adventurer/idle-00.png");
+	private URL backgroundFile = getClass().getResource("day.png");
 
-	public Player protagonist;
-	public int protagonistX = 20;
-	public int protagonistY = 60;
+	public Player player;
+	public int playerX = 20;
+	public int playerY = 60;
 
-	// slime's position
-	public int x = 300;
-	public int y = 300;
-	public int height = 0;
-	public int width = 0;
+	public ManaAmount mana[];
+	public ArrayList<ManaAmount>manaList = new ArrayList<>();
+	public int manaCapacity = 1;
+	public MagicMissle magicMissle;
+	public int manaX = 55;
+	public int manaY = 48;
+	public int bManaX = 65;
+	public int bManaY = 57;
 
-	// animation states
-	public int state = 0;
+	public Monster monster;
+	public ArrayList<Monster> monsterList = new ArrayList<>();
+	public int counter = 1;
+	public Timer timer = new Timer(20000, this);
 
-	// randomizer
-	public Random randomizer;
-
-	// enemy
-	public int enemyCount;
-	Monster[] monsters = new Monster[10];
+	public boolean magicHits = false;
 
 	public Draw(){
-		randomizer = new Random();
-		spawnEnemy();
+		timer.start();
+		spawnPlayer();
+		spawnCreature();
 		
+		mouse = new MouseMotion();
+		addMouseListener(mouse);
+		addMouseMotionListener(mouse);
+
 		try{
+			backgroundImage = ImageIO.read(backgroundFile);
 			image = ImageIO.read(resource);
-			backgroundImage = ImageIO.read(getClass().getResource("day.png"));
 		}
 		catch(IOException e){
 			e.printStackTrace();
 		}
-
-		height = image.getHeight();
-		width = image.getWidth();
-
 		startGame();
+	}
+
+	public void spawnPlayer(){
+		player = new Player(x, gravity, this);
+		mana = new ManaAmount[10];
+
+		for(int i = 0; i < 10; i++){
+			mana[i] = new ManaAmount(manaX, manaY, this);
+			manaList.add(mana[i]);
+			manaX+=20;
+		}
+	}
+
+	public void spawnMonster(){
+		int spawnPostion = 510;
+		if(monsterList.size() != 10){
+			creature = new Creature(spawnPostion, gravity + 10, this);
+			creatureList.add(creature);
+			counter++;
+		}	
+	}
+
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, 600, 500);
+			g.drawImage(backgroundImage, 0, 0, this);
+
+			g.drawImage(player.playerImage, player.xPos, player.yPos, this);
+
+			loadPlayerStats(g);
+
+			for(int m = 0; m <player.missileList.size(); m++ ){
+				if(player.isCasting == true){
+					if(player.missileList.size() != 0){	
+						g.drawImage(player.missileList.get(m).magicImage,player.missileList.get(m).magicX, player.missileList.get(m).magicY, this);	
+					}
+				}
+			}
+
+			for(int i = 0; i < monsterList.size(); i++){
+				if(monsterList.size() != 0){
+					g.drawImage(monsterList.get(i).monsterImage, monsterList.get(i).xPos, creatureList.get(i).yPos, this);
+					g.setColor(Color.RED);
+					g.fillRect(monsterList.get(i).xPos, monsterList.get(i).yPos, 35, 2);
+					g.setColor(Color.GREEN);
+					g.fillRect(monsterList.get(i).xPos, monsterList.get(i).yPos, creatureList.get(i).health, 2);
+				}		
+			}
 	}
 
 	public void startGame(){
