@@ -6,16 +6,16 @@ import java.awt.Rectangle;
 
 public class Monster2{
 	
-	public BufferedImage monster2Image;
-	public URL monster2File = getClass().getResource("knight/idle0.png");
+	public BufferedImage monsterImage2;
+	public URL monsterFile2 = getClass().getResource("knight/idle0.png");
 
 	public int xPos;
 	public int yPos;
 	public int width;
 	public int height;
 
-	public int hp = 40;
-	public int atk = 10
+	public int hp = 30;
+	public int atk = 5
 
 	public boolean isIdle = false;
 	public boolean isMoving = true;
@@ -29,7 +29,7 @@ public class Monster2{
 	public Monster2(Paint color){
 
 		try{
-			monster2Image = ImageIO.read(monster2File);
+			monsterImage2 = ImageIO.read(monsterFile2);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
@@ -39,21 +39,21 @@ public class Monster2{
 		xPos = x;
 		yPos = y;
 		try{
-			monster2Image = ImageIO.read(monster2File);
+			monsterImage2 = ImageIO.read(monsterFile2);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 		this.paint = color;
-		this.width = monster2File.getWidth();
-		this.height = monster2File.getHeight();
-		idleMonster();
+		this.width = monsterFile2.getWidth();
+		this.height = monsterFile2.getHeight();
+		idleMonster2();
 	}
 
-	public Rectangle monster2Bounds(){
+	public Rectangle monsterBounds2(){
 		return (new Rectangle(xPos, yPos, width, height));
 	}
 
-	public boolean monster2Direction(){
+	public boolean monsterDirection2(){
 		if(xPos < paint.protagonist.xPos){
 			return isFacingRight = false;
 		}else{
@@ -62,14 +62,14 @@ public class Monster2{
 	}
 
 	public void idleMonster2(){
-		Thread idleThread = new Thread(new Runnable(){
+		Thread idleThread2 = new Thread(new Runnable(){
 			public void run(){
 				while(isIdle){
-					for(int ctr = 0; ctr < 4; ctr ++){
-						monster2File = getClass().getResource("slime/idle"+ctr+".png");
+					for(int i = 0; i < 4; i ++){
+						monsterFile2 = getClass().getResource("knight/idle"+i+".png");
 						try{
 							paint.repaint();
-							monster2Image = ImageIO.read(monster2File);
+							monsterImage2 = ImageIO.read(monsterFile2);
 							Thread.sleep(150);
 						}catch(IOException e){
 							e.printStackTrace();
@@ -80,30 +80,30 @@ public class Monster2{
 				}
 			}
 		});
-		idleThread.start();
+		idleThread2.start();
 	}
 
 	public void movementMonster2(){
 		isIdle = false;
 		isMoving = true;
 		monsterDirection();
-		Thread moveThread = new Thread(new Runnable(){
+		Thread moveThread2 = new Thread(new Runnable(){
 			public void run(){
 				while(isMoving){
-					for(int ctr = 0; ctr < 4; ctr++){ 
+					for(int m = 0; m < 4; m++){ 
 						if(isFacingRight == true){
 							if(xPos > paint.protagonist.xPos){
 								xPos--;
-								monster2File = getClass().getResource("slime/move"+ctr+".png");
+								monsterFile2 = getClass().getResource("knight/idle"+m+".png");
 							}
 						
 						}else{
-							monster2File = getClass().getResource("slime/move"+ctr+".png");
+							monsterFile2 = getClass().getResource("knight/idle"+m+".png");
 							xPos++;
 						}
 						try{
 							paint.repaint();
-							monster2Image = ImageIO.read(monster2File);
+							monsterImage2 = ImageIO.read(monsterFile2);
 							Thread.sleep(333);
 						}catch(IOException e){
 							e.printStackTrace();
@@ -120,18 +120,18 @@ public class Monster2{
 	public void attackMonster2(){
 		isMoving = false;
 		monsterDirection();
-		for(int ctr = 0; ctr < 5; ctr++){
+		for(int a = 0; a < 10; a++){
 			if(isFacingRight == true && isAttacking == true){
-				monster2File = getClass().getResource("slime/attack"+ctr+".png");
+				monsterFile2 = getClass().getResource("knight/attack"+ctr+".png");
 				xPos-=5;
 			}else{
-				monster2File = getClass().getResource("slime/attack"+ctr+".png");
+				monsterFile2 = getClass().getResource("knight/attack"+ctr+".png");
 				xPos+=5;
 			}
 
 			try{
 				paint.repaint();
-				monster2Image = ImageIO.read(monster2File);
+				monsterImage2 = ImageIO.read(monsterFile2);
 				Thread.sleep(200);
 
 			}catch(IOException e){
@@ -143,7 +143,7 @@ public class Monster2{
 		}
 	}
 
-	public boolean chkHealth(){
+	public boolean chkHealth2(){
 		if(health <= 0){
 			isAttacking = false;
 			isMoving = false;
@@ -152,12 +152,12 @@ public class Monster2{
 		return false;
 	}
 
-	public void monster2Death(){
-		for(int ctr = 0; ctr < 4; ctr++){
-			monster2File = getClass().getResource("slime/die"+ctr+".png");
+	public void monsterDeath2(){
+		for(int d = 0; d < 4; d++){
+			monsterFile2 = getClass().getResource("knight/idle"+ctr+".png");
 			try{
 				paint.repaint();
-				monster2Image = ImageIO.read(monster2File);
+				monsterImage2 = ImageIO.read(monsterFile2);
 				Thread.sleep(300);
 			}catch(IOException e){
 				e.printStackTrace();

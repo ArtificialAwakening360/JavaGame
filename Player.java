@@ -1,7 +1,7 @@
 import javax.imageio.ImageIO;
 import java.io.IOException;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.awt.Rectangle;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -10,20 +10,17 @@ public class Player {
 	public BufferedImage image;
 	public URL resource = getClass().getResource("adventurer/idle-00.png");
 
-	//Protagonist's location:
 	public int xPos = 50;
 	public int yPos = 370;
 	public int height;
 	public int width;
 	public int state = 0;
 
-	//Protagonist's stats:
 	public int healthBar = 200;
 	public int power = 7;
 	public int defense = 2;
 	public int manaPoints = 10;
 
-	//Protagonist's states:
 	public boolean isIdle = true;
 	public boolean isFacingRight = true;
 	public boolean isJumping = false;
@@ -31,10 +28,12 @@ public class Player {
 	public boolean isDead = false;
 	public boolean drawsSword = false;
 
-	//Gravity:
 	public int gravity = 370;
 
-	//Protagonist's Draw activation:
+	public ArrayList<MagicMissile> missileList = new ArrayList<>(10);
+	public MagicMissile magicMissile[] = new MagicMissile[10];
+	public int magicAmmo = 1;
+
 	public Paint paint;
 
 	public Player(Paint paint){
