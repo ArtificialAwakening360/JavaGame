@@ -18,8 +18,8 @@ public class MagicMissile{
 
 	public boolean faceRight = true;
 	public boolean magicActive = false;
-	public boolean missleImpact = false;
-	public boolean missleDmg = false;
+	public boolean missileImpact = false;
+	public boolean missileDmg = false;
 	
 	public int magicDmg = 7;
 
@@ -94,7 +94,7 @@ public class MagicMissile{
 	public void magicHit(){
 		magicActive = false;
 		for(int i = 0; i <8; i++){
-				magicFile = getClass().getResource("playerMagic/hit" + i+".png");
+				magicFile = getClass().getResource("playerMagic/hit"+i+".png");
 		
 			try{
 				magicImage = ImageIO.read(magicFile);
@@ -104,7 +104,7 @@ public class MagicMissile{
 
 			}
 		}	
-		missleImpact = true;
+		missileImpact = true;
 		System.out.println("Magic Strike Hit!");		
 	}
 }

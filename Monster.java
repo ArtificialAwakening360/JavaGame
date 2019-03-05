@@ -143,7 +143,7 @@ public class Monster{
 		}
 	}
 
-	public boolean chkHealth(){
+	public boolean checkHealth(){
 		if(health <= 0){
 			isAttacking = false;
 			isMoving = false;

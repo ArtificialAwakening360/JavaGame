@@ -104,12 +104,12 @@ public class Draw extends JComponent implements ActionListener{
 			g.fillRect(0, 0, 600, 500);
 			g.drawImage(backgroundImage, 0, 0, this);
 
-			g.drawImage(player.playerImage, player.xPos, player.yPos, this);
+			g.drawImage(player.image, player.xPos, player.yPos, this);
 
 			loadPlayerStats(g);
 
 			for(int m = 0; m <player.missileList.size(); m++ ){
-				if(player.isCasting == true){
+				if(player.isUsingMagic == true){
 					if(player.missileList.size() != 0){	
 						g.drawImage(player.missileList.get(m).magicImage,player.missileList.get(m).magicX, player.missileList.get(m).magicY, this);	
 					}
@@ -122,7 +122,7 @@ public class Draw extends JComponent implements ActionListener{
 					g.setColor(Color.RED);
 					g.fillRect(monsterList.get(r).xPos, monsterList.get(r).yPos, 35, 2);
 					g.setColor(Color.GREEN);
-					g.fillRect(monsterList.get(r).xPos, monsterList.get(r).yPos, monsterList.get(r).health, 2);
+					g.fillRect(monsterList.get(r).xPos, monsterList.get(r).yPos, monsterList.get(r).hp, 2);
 				}		
 			}
 	}
@@ -222,7 +222,7 @@ public class Draw extends JComponent implements ActionListener{
 				if(player.drawsSword == true){
 					if(playerBounds.intersects(monsterBounds)){
 						System.out.println("Player attacks");
-						monsterList.get(c).health-=player.power;
+						monsterList.get(c).hp-=player.power;
 					}
 				}
 				for(MagicMissile playerMagic: player.missileList){
@@ -245,14 +245,14 @@ public class Draw extends JComponent implements ActionListener{
 				
 				if(player.missileList.get(p).missileImpact == true){
 					System.out.println("Assessing Magic Damage");
-					monsterList.get(p).health-=player.missileList.get(p).magicDmg;
+					monsterList.get(p).hp-=player.missileList.get(p).magicDmg;
 				}	
 			}
 		}
 
 		for(int m = 0; m < monsterList.size(); m ++){
 			if(monsterList.get(m).isAttacking == true){
-				player.healthBar = player.healthBar - (monsterList.get(m).power / player.defense);
+				player.healthBar = player.healthBar - (monsterList.get(m).atk / player.defense);
 				System.out.println("Assessing Monster Damage");
 			}
 		}
@@ -261,8 +261,8 @@ public class Draw extends JComponent implements ActionListener{
 	public void eraseImages(){
 		
 		for(int e = 0; e < monsterList.size(); e++){
-			if(monsterList.get(e).health <= 0 ){
-				monsterList.remove(i);
+			if(monsterList.get(e).hp <= 0 ){
+				monsterList.remove(e);
 				System.out.println("monster deleted");
 			}
 		}

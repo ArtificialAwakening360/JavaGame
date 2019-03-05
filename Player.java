@@ -24,7 +24,7 @@ public class Player {
 	public boolean isIdle = true;
 	public boolean isFacingRight = true;
 	public boolean isJumping = false;
-	public boolean isCasting = false;
+	public boolean isUsingMagic = false;
 	public boolean isDead = false;
 	public boolean drawsSword = false;
 
@@ -64,6 +64,10 @@ public class Player {
 		idleAnimation(paint);
 	}
 
+	public Rectangle playerBounds(){
+		return(new Rectangle (xPos, yPos, width, height));
+	}
+
 	public void idleAnimation(Paint paint){
 		isIdle = true;
 		Thread idleThread = new Thread (new Runnable(){
@@ -75,7 +79,7 @@ public class Player {
 						}else{
 							resource = getClass().getResource("adventurer/idleback-0"+ctr+".png");
 						}
-						verifyDeath();
+						checkDeath();
 
 						try{
 							image = ImageIO.read(resource);
@@ -99,11 +103,11 @@ public class Player {
 				if(isFacingRight == true){
 					resource = getClass().getResource("adventurer/run"+m+".png");
 				}else{
-					resource = getClass().getResource("adventurer/run"+m+".png");
+					resource = getClass().getResource("adventurer/runback"+m+".png");
 				}
 				m++;
 			}else{
-				r = 0;
+				m = 0;
 			}
 
 			try{
@@ -322,7 +326,7 @@ public class Player {
 	}
 	public void useMagic(Draw canvas){
 		isIdle = false;
-		verifyDeath();
+		checkDeath();
 		playerMagic(canvas);
 	}
 
