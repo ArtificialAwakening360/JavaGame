@@ -25,7 +25,7 @@ public class Draw extends JComponent implements ActionListener{
 	public int button1_width = 200;
 	public int button1_height = 50;
 
-	public MouseListener mouse;
+	public Mouse mouse;
 	public Rectangle mouseBounds;
 
 	public Rectangle buttonTwo;
@@ -64,13 +64,12 @@ public class Draw extends JComponent implements ActionListener{
 		spawnPlayer();
 		spawnMonster();
 		
-		mouse = new MouseListener();
+		mouse = new Mouse();
 		addMouseListener(mouse);
 		addMouseMotionListener(mouse);
 
 		try{
 			backgroundImage = ImageIO.read(backgroundFile);
-			image = ImageIO.read(backgroundImage);
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -147,14 +146,14 @@ public class Draw extends JComponent implements ActionListener{
 
 		g.setColor(Color.GREEN);
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		g.drawString("Health:", 10, 34);
+		g.useString("Health:", 10, 34);
 		g.setColor(Color.GREEN);
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		g.drawString(health + "/200", 60, 47);
+		g.useString(health + "/200", 60, 47);
 
 		g.setColor(Color.MAGENTA);
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		g.drawString("Magic:", 10, 66);
+		g.useString("Magic:", 10, 66);
 
 		for(int m = 0; m < magicList.size(); m++){
 			g.drawImage(magicList.get(m).magicImage, magicList.get(m).xPos, magicList.get(m).yPos, this);
@@ -219,7 +218,7 @@ public class Draw extends JComponent implements ActionListener{
 					monsterList.get(c).isAttacking = false;
 					monsterList.get(c).isMoving = true;
 				}
-				if(player.drawsSword == true){
+				if(player.useSword == true){
 					if(playerBounds.intersects(monsterBounds)){
 						System.out.println("Player attacks");
 						monsterList.get(c).hp-=player.power;

@@ -3,7 +3,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.Rectangle;
 
-public class MouseListener extends MouseAdapter{
+public class Mouse extends MouseAdapter{
 
 	public int x;
 	public int y;

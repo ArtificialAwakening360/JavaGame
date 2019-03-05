@@ -12,7 +12,7 @@ public class MyFrame extends JFrame implements KeyListener{
 
 	private Draw draw;
 	private Player player;
-	private MouseListener mouse;
+	private Mouse mouse;
 
 	public MyFrame(){
 		draw = new Draw();

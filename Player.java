@@ -1,9 +1,10 @@
-import javax.imageio.ImageIO;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.awt.Rectangle;
 import java.net.URL;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import javax.swing.JComponent;
 
 public class Player {
 
@@ -26,7 +27,7 @@ public class Player {
 	public boolean isJumping = false;
 	public boolean isUsingMagic = false;
 	public boolean isDead = false;
-	public boolean drawsSword = false;
+	public boolean useSword = false;
 
 	public int gravity = 370;
 
@@ -34,20 +35,20 @@ public class Player {
 	public MagicMissile magicMissile[] = new MagicMissile[10];
 	public int magicAmmo = 1;
 
-	public Paint paint;
+	public JComponent comp;
 
-	public Player(Paint paint){
+	public Player(JComponent comp){
 		try{
 			image = ImageIO.read(resource);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 
-		this.paint = paint;
-		idleAnimation(paint);
+		this.comp = comp;
+		idleAnimation(comp);
 	}
 	
-	public Player(int x, int y, Paint paint){
+	public Player(int x, int y, JComponent comp){
 		x = xPos;
 		y = yPos;
 
@@ -56,19 +57,19 @@ public class Player {
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-		this.paint = paint;
+		this.comp = comp;
 
 		width = image.getWidth();
 		height = image.getHeight();
 
-		idleAnimation(paint);
+		idleAnimation(comp);
 	}
 
 	public Rectangle playerBounds(){
 		return(new Rectangle (xPos, yPos, width, height));
 	}
 
-	public void idleAnimation(Paint paint){
+	public void idleAnimation(JComponent comp){
 		isIdle = true;
 		Thread idleThread = new Thread (new Runnable(){
 			public void run(){
@@ -84,7 +85,7 @@ public class Player {
 						try{
 							image = ImageIO.read(resource);
 							Thread.sleep(1000/30);
-							paint.repaint();
+							comp.repaint();
 
 						}catch(IOException e){
 							e.printStackTrace();
@@ -99,20 +100,20 @@ public class Player {
 	}
 
 	public void moveAnimation(){
-			if(m < 6){
+			if(state < 6){
 				if(isFacingRight == true){
-					resource = getClass().getResource("adventurer/run"+m+".png");
+					resource = getClass().getResource("adventurer/run"+state+".png");
 				}else{
-					resource = getClass().getResource("adventurer/runback"+m+".png");
+					resource = getClass().getResource("adventurer/runback"+state+".png");
 				}
-				m++;
+				state++;
 			}else{
-				m = 0;
+				state = 0;
 			}
 
 			try{
-				paint.repaint();
-				resource = ImageIO.read(image);
+				comp.repaint();
+				image = ImageIO.read(resource);
 			}catch(IOException e){
 				e.printStackTrace();
 			}
@@ -132,7 +133,7 @@ public class Player {
 						xPos-=15;						
 					}
 					try{
-						paint.repaint();
+						comp.repaint();
 						image = ImageIO.read(resource);
 						Thread.sleep(1000/30);
 					}catch(IOException e){
@@ -160,7 +161,7 @@ public class Player {
 						yPos+=2;
 					}							
 					try{
-						paint.repaint();
+						comp.repaint();
 						image = ImageIO.read(resource);
 						Thread.sleep(1000/30);
 					}catch(IOException e){
@@ -169,45 +170,45 @@ public class Player {
 						e.printStackTrace();
 					}						
 				}while(yPos < gravity);
-				idleAnimation(paint);
+				idleAnimation(comp);
 			}
 		});
 		fallThread.start();
 	}
 
 	public void crouchAnimation(){
-		if(c < 4){
+		if(state < 4){
 			if(isFacingRight){
-				imageFile = getClass().getResource("adventurer/crouch-0"+state+".png");
+				resource = getClass().getResource("adventurer/crouch-0"+state+".png");
 			}else{				
-				imageFile = getClass().getResource("adventurer/crouch-0"+state+".png");
+				resource = getClass().getResource("adventurer/crouchback"+state+".png");
 			}
-			c++;
+			state++;
 		}else{
-			c = 0;
+			state = 0;
 		}	
 		try{
-			paint.repaint();
+			comp.repaint();
 			image = ImageIO.read(resource);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 
-	public void playerMana(Draw canvas){
+	public void playerMana(JComponent comp){
 		
 		Thread manaThread = new Thread(new Runnable(){
 			public void run(){
 				for(int m = 0; m < 7; m++){
 					if(isFacingRight == true){
-						imageFile = getClass().getResource("adventurer/cast-0"+m+".png");
+						resource = getClass().getResource("adventurer/cast-0"+m+".png");
 					}else{
-						imageFile = getClass().getResource("adventurer/cast-0"+m+".png");
+						resource = getClass().getResource("adventurer/cast-0"+m+".png");
 					}
 
 					try{
-						canvas.repaint();
-						playerImage = ImageIO.read(imageFile);
+						comp.repaint();
+						image = ImageIO.read(resource);
 						Thread.sleep(1000/30);
 					}catch(IOException e){
 						e.printStackTrace();
@@ -216,17 +217,17 @@ public class Player {
 						e.printStackTrace();
 					}
 				}
-				fireMana(canvas);
-				idleAnimation(canvas);
+				fireMana(comp);
+				idleAnimation(comp);
 			}
 		});
 		manaThread.start();
 	}
 
-	public void fireMana(Draw canvas){
+	public void fireMana(JComponent comp){
 		if(missileList.size() != 11){
 			
-			magicMissile[magicAmmo] = new MagicMissile(xPos + 20, yPos, canvas);
+			magicMissile[magicAmmo] = new MagicMissile(xPos + 20, yPos, comp);
 			
 			missileList.add(magicMissile[magicAmmo]);
 	
@@ -236,7 +237,7 @@ public class Player {
 		}else{
 
 		}	
-		System.out.println(misslieTest.size() +"MISSiLE TEST");
+		System.out.println(missileList.size() +"MISSILE TEST");
 	}
 
 	public void swordAttack(){
@@ -245,15 +246,15 @@ public class Player {
 				for(int s = 0; s < 15; s++){
 					if(useSword == true){
 						if(isFacingRight == true){
-							imageFile = getClass().getResource("adventurer/attack" +i+".png");
+							resource = getClass().getResource("adventurer/attack"+s+".png");
 						}else{
-							imageFile = getClass().getResource("adventurer/swordback" +i+".png");
+							resource = getClass().getResource("adventurer/swordback"+s+".png");
 						}
 					}
 
 					try{
-						canvas.repaint();
-						playerImage = ImageIO.read(imageFile);
+						comp.repaint();
+						image = ImageIO.read(resource);
 						Thread.sleep(1000/30);
 
 					}catch(IOException e){
@@ -262,8 +263,8 @@ public class Player {
 						e.printStackTrace();
 					}
 				}
-				drawSword = false;
-				standingAnimation(canvas);
+				useSword = false;
+				idleAnimation(comp);
 			}
 		});
 		swordThread.start();
@@ -281,15 +282,15 @@ public class Player {
 		
 		for(int d = 0; d < 6; d++){	
 			if(isFacingRight == true){
-				imageFile = getClass().getResource("adventurer/die-0"+d+".png");
+				resource = getClass().getResource("adventurer/die-0"+d+".png");
 			
 			}else{
-				imageFile = getClass().getResource("adventurer/dieback"+d+".png");
+				resource = getClass().getResource("adventurer/dieback"+d+".png");
 			}
 
 			try{
-				canvas.repaint();
-				playerImage = ImageIO.read(imageFile);
+				comp.repaint();
+				image = ImageIO.read(resource);
 
 			}catch(IOException e){
 				e.printStackTrace();
@@ -302,7 +303,7 @@ public class Player {
 		isIdle = false;
 		isFacingRight = false;
 		checkDeath();
-		movementAnimation();
+		moveAnimation();
 	}
 
 	public void moveRight(){
@@ -310,13 +311,13 @@ public class Player {
 		isIdle = false;
 		isFacingRight = true;
 		checkDeath();
-		movementAnimation();
+		moveAnimation();
 	}
 
 	public void jump(){
 		isIdle = false;
 		checkDeath();
-		jumpingAnimation();
+		jumpAnimation();
 	}
 
 	public void crouch(){
@@ -324,17 +325,17 @@ public class Player {
 		checkDeath();
 		crouchAnimation();
 	}
-	public void useMagic(Draw canvas){
+	public void useMagic(JComponent comp){
 		isIdle = false;
 		checkDeath();
-		playerMagic(canvas);
+		playerMana(comp);
 	}
 
 	public void useSword(){
 		isIdle = false;
 		isUsingMagic = false;
-		drawSword = true;
-		canvas.collisionDetection();
+		useSword = true;
+		comp.collisionDetection();
 		checkDeath();
 		swordAttack();
 	}
