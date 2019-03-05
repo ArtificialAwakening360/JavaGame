@@ -1,5 +1,6 @@
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.JComponent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.awt.Rectangle;
@@ -14,7 +15,7 @@ public class MagicMissile{
 	public int magicWidth;
 	public int magicHeight;
 
-	public Draw draw;
+	public JComponent comp;
 
 	public boolean faceRight = true;
 	public boolean magicActive = false;
@@ -32,7 +33,7 @@ public class MagicMissile{
 		}
 		usingMagic();
 	}
-	public MagicMissile(int x, int y, Draw canvas){
+	public MagicMissile(int x, int y, JComponent comp){
 		magicActive = true;
 		magicX = x;
 		magicY = y;

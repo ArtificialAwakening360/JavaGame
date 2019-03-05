@@ -54,7 +54,7 @@ public class Monster{
 	}
 
 	public boolean monsterDirection(){
-		if(xPos < comp.protagonist.xPos){
+		if(xPos < comp.player.xPos){
 			return isFacingRight = false;
 		}else{
 			return isFacingRight = true;
@@ -92,7 +92,7 @@ public class Monster{
 				while(isMoving){
 					for(int ctr = 0; ctr < 4; ctr++){ 
 						if(isFacingRight == true){
-							if(xPos > comp.protagonist.xPos){
+							if(xPos > comp.player.xPos){
 								xPos--;
 								monsterFile = getClass().getResource("slime/move"+ctr+".png");
 							}

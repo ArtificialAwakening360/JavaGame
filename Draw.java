@@ -146,14 +146,14 @@ public class Draw extends JComponent implements ActionListener{
 
 		g.setColor(Color.GREEN);
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		g.useString("Health:", 10, 34);
+		g.drawString("Health:", 10, 34);
 		g.setColor(Color.GREEN);
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		g.useString(health + "/200", 60, 47);
+		g.drawString(health + "/200", 60, 47);
 
 		g.setColor(Color.MAGENTA);
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		g.useString("Magic:", 10, 66);
+		g.drawString("Magic:", 10, 66);
 
 		for(int m = 0; m < magicList.size(); m++){
 			g.drawImage(magicList.get(m).magicImage, magicList.get(m).xPos, magicList.get(m).yPos, this);

@@ -331,7 +331,7 @@ public class Player {
 		playerMana(comp);
 	}
 
-	public void useSword(){
+	public void useSword(JComponent comp){
 		isIdle = false;
 		isUsingMagic = false;
 		useSword = true;
