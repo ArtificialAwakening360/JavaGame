@@ -31,9 +31,9 @@ public class Player {
 
 	public int gravity = 370;
 
-	public ArrayList<MagicMissile> missileList = new ArrayList<>(10);
-	public MagicMissile magicMissile[] = new MagicMissile[10];
-	public int magicAmmo = 1;
+	public ArrayList<MagicMissile> missileList = new ArrayList<>(15);
+	public MagicMissile magicMissile[] = new MagicMissile[15];
+	public int magicAmount = 1;
 
 	public JComponent comp;
 
@@ -225,13 +225,13 @@ public class Player {
 	}
 
 	public void fireMana(JComponent comp){
-		if(missileList.size() != 11){
+		if(missileList.size() != 10){
 			
-			magicMissile[magicAmmo] = new MagicMissile(xPos + 20, yPos, comp);
+			magicMissile[magicAmount] = new MagicMissile(xPos + 20, yPos, comp);
 			
-			missileList.add(magicMissile[magicAmmo]);
+			missileList.add(magicMissile[magicAmount]);
 	
-			magicAmmo++;
+			magicAmount++;
 			
 			isUsingMagic = true;
 		}else{
