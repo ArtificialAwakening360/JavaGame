@@ -65,14 +65,14 @@ public class MagicMissile{
 				
 				while(magicActive){
 					
-					for(int i = 0; i < 7; i++){
+					for(int i = 0; i < 13; i++){
 						if(i < 4){
-							magicFile = getClass().getResource("playerMagic/magic"+i+".png");
+							magicFile = getClass().getResource("projectileMagic/magic"+i+".png");
 							magicX+=10;
 
 						}else if(i >= 3 && i < 7){
 							if(magicX < 600){
-								magicFile = getClass().getResource("playerMagic/magic"+i+".png");
+								magicFile = getClass().getResource("projectileMagic/magic"+i+".png");
 								magicX+=10;
 							}else{
 								magicActive = false;
