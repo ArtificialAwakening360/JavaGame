@@ -76,7 +76,7 @@ public class Player {
 				while(isIdle){
 					for(int ctr = 0; ctr < 4; ctr++){
 						if(isFacingRight == true){
-							resource = getClass().getResource("adventurer/idle-0"+ctr+".png");
+							resource = getClass().getResource("adventurer/idle-2-0"+ctr+".png");
 						}else{
 							resource = getClass().getResource("adventurer/idleback"+ctr+".png");
 						}
@@ -199,7 +199,7 @@ public class Player {
 		
 		Thread manaThread = new Thread(new Runnable(){
 			public void run(){
-				for(int m = 0; m < 7; m++){
+				for(int m = 1; m < 9; m++){
 					if(isFacingRight == true){
 						resource = getClass().getResource("adventurer/cast-0"+m+".png");
 					}else{
