@@ -174,11 +174,11 @@ public class Draw extends JComponent implements ActionListener{
 								eraseImages();
 							} 
 							if(monsterList.get(m).isAttacking != true){
-								monsterList.get(m).movementMonster();
+								monsterList.get(m).movementMonster(player);
 								collisionDetection();
 
 							}else {
-								monsterList.get(m).attackMonster();
+								monsterList.get(m).attackMonster(player);
 								System.out.println("monster attack");
 								collisionDetection();
 								damageDetection();

@@ -78,7 +78,7 @@ public class Player {
 						if(isFacingRight == true){
 							resource = getClass().getResource("adventurer/idle-0"+ctr+".png");
 						}else{
-							resource = getClass().getResource("adventurer/idleback-0"+ctr+".png");
+							resource = getClass().getResource("adventurer/idleback"+ctr+".png");
 						}
 						checkDeath();
 
@@ -335,7 +335,7 @@ public class Player {
 		isIdle = false;
 		isUsingMagic = false;
 		useSword = true;
-		comp.collisionDetection();
+		// comp.collisionDetection();
 		checkDeath();
 		swordAttack();
 	}

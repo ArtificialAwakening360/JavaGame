@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class MagicAmount{
 
 	public BufferedImage magicImage;
-	public URL magicFile = getClass().getResource("manaImages/mana0.png");
+	public URL magicFile = getClass().getResource("magicImages/mana0.png");
 
 	public Draw canvas;
 

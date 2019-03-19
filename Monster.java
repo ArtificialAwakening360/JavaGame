@@ -28,6 +28,8 @@ public class Monster{
 
 	public Monster(JComponent comp){
 
+		this.comp = comp;
+
 		try{
 			monsterImage = ImageIO.read(monsterFile);
 		}catch(IOException e){
@@ -53,8 +55,8 @@ public class Monster{
 		return (new Rectangle(xPos, yPos, width, height));
 	}
 
-	public boolean monsterDirection(){
-		if(xPos < comp.player.xPos){
+	public boolean monsterDirection(Player player){
+		if(xPos < player.xPos){
 			return isFacingRight = false;
 		}else{
 			return isFacingRight = true;
@@ -83,16 +85,16 @@ public class Monster{
 		idleThread.start();
 	}
 
-	public void movementMonster(){
+	public void movementMonster(Player player){
 		isIdle = false;
 		isMoving = true;
-		monsterDirection();
+		monsterDirection(player);
 		Thread moveThread = new Thread(new Runnable(){
 			public void run(){
 				while(isMoving){
 					for(int ctr = 0; ctr < 4; ctr++){ 
 						if(isFacingRight == true){
-							if(xPos > comp.player.xPos){
+							if(xPos > player.xPos){
 								xPos--;
 								monsterFile = getClass().getResource("slime/move"+ctr+".png");
 							}
@@ -117,9 +119,9 @@ public class Monster{
 		moveThread.start();
 	}
 
-	public void attackMonster(){
+	public void attackMonster(Player player){
 		isMoving = false;
-		monsterDirection();
+		monsterDirection(player);
 		for(int ctr = 0; ctr < 5; ctr++){
 			if(isFacingRight == true && isAttacking == true){
 				monsterFile = getClass().getResource("slime/attack"+ctr+".png");

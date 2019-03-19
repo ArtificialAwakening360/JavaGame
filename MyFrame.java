@@ -63,7 +63,7 @@ public class MyFrame extends JFrame implements KeyListener{
 
 		}else if(code == e.VK_S){
 			if(player.isDead != true){
-				player.useSword();
+				player.useSword(draw);
 			}
 		}
 	}
